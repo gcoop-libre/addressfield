@@ -126,7 +126,7 @@ function addressfield_field_widget_form(form, form_state, field, instance, langc
     // is optional add an empty option for '- None -'.
     var child = {
       type: 'select',
-      title: 'Country',
+      title: t('Country'),
       options: {},
       attributes: {
         id: country_widget_id,
@@ -914,7 +914,7 @@ function theme_addressfield_form_element(variables) {
       "'" + variables.name + "'" +
       ")";
   var child = {
-    title: 'Country',
+    title: t('Country'),
     options: {},
     attributes: {
       id: country_widget_id,
