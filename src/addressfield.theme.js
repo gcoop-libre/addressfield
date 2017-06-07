@@ -21,7 +21,7 @@ function theme_addressfield_form_element(variables) {
       "'" + variables.name + "'" +
       ")";
   var child = {
-    title: 'Country',
+    title: t('Country'),
     options: {},
     attributes: {
       id: country_widget_id,
