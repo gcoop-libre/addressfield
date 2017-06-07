@@ -123,6 +123,15 @@ function addressfield_field_widget_form(form, form_state, field, instance, langc
 
     }
 
+    // Hide the country select if there is only one country in the list
+    if (
+      (typeof(instance.widget.settings.format_handlers['address-hide-country'] != 'undefined')) &&
+      (instance.widget.settings.format_handlers['address-hide-country'] == 'address-hide-country') &&
+      (Object.keys(child.options).length == 1)
+    ) {
+      child.type = 'hidden';
+      child.title = '';
+    }
     // Finally push the child onto the element and place an empty container for
     // the country's widget to be injected dynamically.
     items[delta].children.push(child);
