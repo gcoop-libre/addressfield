@@ -755,6 +755,7 @@ function addressfield_services_postprocess_inject() {
         }
       });
     });
+    delete(_address_field_items[field_name]);
   });
 }
 
