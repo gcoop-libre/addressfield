@@ -59,6 +59,7 @@ function _addressfield_field_widget_form_country_onchange(select, widget_id, del
         var showLastName = false;
         var showThoroughfare = false;
         var showPremise = false;
+        var address_optional = false;
         if (instance && instance.widget.settings.format_handlers['address-hide-street'] == 0) {
           showThoroughfare = true;
           showPremise = true;
@@ -71,6 +72,12 @@ function _addressfield_field_widget_form_country_onchange(select, widget_id, del
           showPremise = typeof variables.components.premise !== 'undefined';
         }
 
+        if (instance &&
+        typeof instance.widget.settings.format_handlers['address-optional'] !== 'undefined' &&
+        instance.widget.settings.format_handlers['address-optional'] == 'address-optional') {
+          address_optional = true;
+        }
+
         // Name line
         if (showNameLine && !showFirstName && !showLastName) {
           components.push({
@@ -80,7 +87,7 @@ function _addressfield_field_widget_form_country_onchange(select, widget_id, del
               id: widget_id + '-name_line',
               class: 'addressfield-name-line'
             },
-            required: true
+            required: !address_optional
           });
         }
 
@@ -93,7 +100,7 @@ function _addressfield_field_widget_form_country_onchange(select, widget_id, del
               id: widget_id + '-first_name',
               class: 'addressfield-first-name'
             },
-            required: true
+            required: !address_optional
           });
         }
 
@@ -106,7 +113,7 @@ function _addressfield_field_widget_form_country_onchange(select, widget_id, del
               id: widget_id + '-last_name',
               class: 'addressfield-last-name'
             },
-            required: true
+            required: !address_optional
           });
         }
 
@@ -119,7 +126,7 @@ function _addressfield_field_widget_form_country_onchange(select, widget_id, del
               id: widget_id + '-thoroughfare',
               class: 'addressfield-thoroughfare'
             },
-            required: true
+            required: !address_optional
           });
         }
 
@@ -136,6 +143,10 @@ function _addressfield_field_widget_form_country_onchange(select, widget_id, del
         }
 
         // locality
+        var locality_required = _addressfield_widget_field_required(address_format, 'locality');
+        if (address_optional) {
+          locality_required = false;
+        }
         components.push({
           theme: 'textfield',
           attributes: {
@@ -143,23 +154,39 @@ function _addressfield_field_widget_form_country_onchange(select, widget_id, del
             id: widget_id + '-locality',
             class: 'addressfield-locality'
           },
-          required: _addressfield_widget_field_required(address_format, 'locality')
+          required: locality_required
         });
 
         // administrative_area
         if (administrative_areas) {
+          var adm_areas_required = _addressfield_widget_field_required(address_format, 'administrative_area');
+          if (address_optional) {
+            adm_areas_required = false;
+          }
+          var adm_areas_options = {};
+          //If administrative_area is not required add the -nothing- option
+          if (!adm_areas_required) {
+            adm_areas_options[''] = t('-Ninguno-');
+          }
+          for (var value in administrative_areas) {
+            adm_areas_options[value] = administrative_areas[value];
+          }
           components.push({
             theme: 'select',
-            options: administrative_areas,
+            options: adm_areas_options,
             attributes: {
               id: widget_id + '-administrative_area',
               class: 'addressfield-administrative-area'
             },
-            required: _addressfield_widget_field_required(address_format, 'administrative_area')
+            required: adm_areas_required
           });
         }
 
         // postal_code
+        var postal_code_required = _addressfield_widget_field_required(address_format, 'postal_code');
+        if (address_optional) {
+          postal_code_required = false;
+        }
         components.push({
           theme: 'textfield',
           attributes: {
@@ -167,7 +194,7 @@ function _addressfield_field_widget_form_country_onchange(select, widget_id, del
             id: widget_id + '-postal_code',
             class: 'addressfield-postal-code'
           },
-          required: _addressfield_widget_field_required(address_format, 'postal_code')
+          required: postal_code_required
         });
 
         // Now render each widget then inject them into the container.
